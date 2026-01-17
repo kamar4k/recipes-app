@@ -1,0 +1,23 @@
+name: Build and publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      is_release:
+        description: "Это релизный билд"
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  build:
+    uses: kamar4k/pipelines/.github/workflows/common-build.yml@v1
+    with:
+      branch: ${{ github.ref_name }}
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
