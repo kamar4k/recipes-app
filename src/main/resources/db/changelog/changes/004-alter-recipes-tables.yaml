@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-1
+      author: kamae
+      changes:
+        - addColumn:
+            tableName: recipe
+            columns:
+              - column:
+                  name: author
+                  type: varchar(128)
+                  constraints:
+                    nullable: true
+
+        - createIndex:
+            tableName: recipe
+            indexName: idx_recipe_author
+            columns:
+              - column:
+                  name: author

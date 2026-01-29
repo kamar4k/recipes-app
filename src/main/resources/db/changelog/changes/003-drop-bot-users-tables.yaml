@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-1
+      author: kamae
+      changes:
+        - dropTable:
+            tableName: bot_user
