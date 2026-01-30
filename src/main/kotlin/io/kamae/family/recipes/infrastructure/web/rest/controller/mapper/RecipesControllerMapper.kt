@@ -2,44 +2,45 @@ package io.kamae.family.recipes.infrastructure.web.rest.controller.mapper
 
 import io.kamae.family.recipes.domain.model.Recipe
 import io.kamae.family.recipes.domain.model.RecipeShortInfo
-import io.kamae.family.recipes.infrastructure.web.rest.dto.RecipeRsDto
 import io.kamae.family.recipes.infrastructure.web.rest.dto.ListRecipesRsDto
 import io.kamae.family.recipes.infrastructure.web.rest.dto.PostRecipeRqDto
+import io.kamae.family.recipes.infrastructure.web.rest.dto.RecipeRsDto
 import io.kamae.family.recipes.infrastructure.web.rest.dto.RecipeShortInfoDto
-import org.mapstruct.*
+import org.springframework.stereotype.Component
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-abstract class RecipesControllerMapper {
+@Component
+class RecipesControllerMapper {
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mappings(
-        Mapping(target = "id"),
-        Mapping(target = "title"),
-        Mapping(target = "ingredients"),
-        Mapping(target = "instructions"),
-        Mapping(target = "author")
-    )
-    abstract fun mapRqDtoToRecipe(postRecipeRqDto: PostRecipeRqDto): Recipe
+    fun mapRqDtoToRecipe(postRecipeRqDto: PostRecipeRqDto): Recipe = postRecipeRqDto.let {
+        Recipe(
+            it.id,
+            it.title,
+            it.ingredients,
+            it.instructions,
+            it.author
+        )
+    }
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mappings(
-        Mapping(target = "id"),
-        Mapping(target = "title"),
-        Mapping(target = "ingredients"),
-        Mapping(target = "instructions"),
-        Mapping(target = "author")
-    )
-    abstract fun mapRecipeToRsDto(recipe: Recipe): RecipeRsDto
+    fun mapRecipeToRsDto(recipe: Recipe): RecipeRsDto = recipe.let {
+        RecipeRsDto(
+            it.id!!,
+            it.title,
+            it.ingredients,
+            it.instructions,
+            it.author
+        )
+    }
 
     fun mapRecipeShortInfoListToRsDto(recipeShortInfoList: List<RecipeShortInfo>): ListRecipesRsDto =
         ListRecipesRsDto(data = mapRecipeShortInfoListToListRecipesRsDto(recipeShortInfoList))
 
-    abstract fun mapRecipeShortInfoListToListRecipesRsDto(recipeShortInfoList: List<RecipeShortInfo>): List<RecipeShortInfoDto>
+    private fun mapRecipeShortInfoListToListRecipesRsDto(recipeShortInfoList: List<RecipeShortInfo>): List<RecipeShortInfoDto> =
+        recipeShortInfoList.map { mapRecipeShortInfoToRsDto(it) }
 
-    @BeanMapping(ignoreByDefault = true)
-    @Mappings(
-        Mapping(target = "id"),
-        Mapping(target = "title")
-    )
-    abstract fun mapRecipeShortInfoToRsDto(recipeShortInfo: RecipeShortInfo): RecipeShortInfoDto
+    private fun mapRecipeShortInfoToRsDto(recipeShortInfo: RecipeShortInfo): RecipeShortInfoDto = recipeShortInfo.let {
+        RecipeShortInfoDto(
+            it.id,
+            it.title
+        )
+    }
 }

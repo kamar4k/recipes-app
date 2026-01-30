@@ -1,43 +1,49 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    kotlin("kapt") version "1.9.25"
+    kotlin("jvm") version "2.0.21"
+    kotlin("plugin.spring") version "2.0.21"
+    kotlin("kapt") version "2.0.21"
+    kotlin("plugin.jpa") version "2.0.21"
     id("org.springframework.boot") version "3.5.9"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "io.kamae.family"
 
+
 repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/kamar4k/helper-bom")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("github.username") as String?
+            password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("github.token") as String?
+        }
+    }
     mavenCentral()
 }
 
 dependencies {
+    implementation(platform("io.github.kamar4k:helper-bom:1.1.0+"))
     //Spring
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     //Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    //MapStruct
-    implementation("org.mapstruct:mapstruct:1.6.3")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-    kapt("org.mapstruct:mapstruct-processor:1.6.3")
     //Arrow
-    implementation("io.arrow-kt:arrow-core:1.2.4")
+    implementation("io.arrow-kt:arrow-core")
     //Store
-    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2")
-    implementation("org.liquibase:liquibase-core:5.0.1")
+    implementation("org.liquibase:liquibase-core")
     //logbook
-    implementation("org.zalando:logbook-spring-boot-starter:3.7.2")
+    implementation("org.zalando:logbook-spring-boot-starter")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("io.mockk:mockk:1.14.7")
-    testImplementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("io.mockk:mockk")
+    testImplementation("com.ninja-squad:springmockk")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
